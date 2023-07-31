@@ -5,6 +5,8 @@ import Navbar from "@/components/global/Navbar";
 import Footer from "@/components/global/Footer";
 
 import { Josefin_Sans, Crimson_Pro } from "next/font/google";
+import RootLayoutAnimation from "@/components/animatedLayouts.tsx/RootLayout";
+
 const titleFont = Josefin_Sans({
   subsets: ["latin"],
   variable: "--font-title",
@@ -25,13 +27,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${titleFont.variable} ${textFont.variable}`}>
+    <html
+      lang="en"
+      className={`noJS ${titleFont.variable} ${textFont.variable}`}
+    >
       <body className="overflow-hidden">
-        <main className="h-screen flex flex-col overflow-auto">
+        <RootLayoutAnimation>
           <Navbar />
           {children}
-          {/* <Footer /> */}
-        </main>
+        </RootLayoutAnimation>
       </body>
     </html>
   );

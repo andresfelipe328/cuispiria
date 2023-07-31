@@ -54,6 +54,10 @@
 }
 
 @layer components {
+  .noJS .root {
+    animation: fade-in-fallback 0.1s 2s forwards ease;
+  }
+
   .icon {
     @apply text-xl text-dark group-hover:text-light group-hover:scale-110 transition-all duration-200 ease-in-out;
   }
