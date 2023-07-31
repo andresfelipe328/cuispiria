@@ -2,26 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+  html {
+    @apply bg-main;
+  }
+
+  h1,
+  h2 {
+    @apply font-title font-bold text-dark uppercase;
+  }
+
+  h1 {
+    @apply text-[1.25rem] text-light;
+  }
+  h2 {
+    @apply text-[1.1rem];
+  }
+  h3 {
+    @apply text-[1.05rem] font-title uppercase;
+  }
+
+  p,
+  small,
+  input,
+  li,
+  label {
+    @apply font-text text-dark text-base;
+  }
+
+  small {
+    @apply font-semibold;
+  }
+  input {
+    @apply outline-none border-none p-3 bg-light/50 rounded-md shadow-small hover:shadow-medium 
+    focus:shadow-medium text-dark placeholder:text-dark placeholder:opacity-80 transition-all duration-200 ease-in-out;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-light/50;
+  }
+  ::-webkit-scrollbar {
+    @apply w-[.5rem];
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark/50;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .icon {
+    @apply text-xl text-dark group-hover:text-light group-hover:scale-110 transition-all duration-200 ease-in-out;
+  }
+
+  .filter-checkbox {
+    @apply p-1 flex items-center justify-center rounded-md bg-extra peer-checked:bg-dark peer-checked:shadow-small hover:shadow-small hover:bg-dark transition-all duration-200 ease-in-out cursor-pointer;
+  }
 }
