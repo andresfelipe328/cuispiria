@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import gsap from "gsap";
 
 import SearchFilters from "./SearchFilters";
 import SearchRecipeForm from "../forms/SearchRecipeForm";
@@ -13,14 +12,14 @@ type Props = {
 
 // Recieves setRecipies to update list
 const RecipeSearch = ({ setRecipes }: Props) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean | null>(null);
 
   return (
     <>
       <CollapseLayout
         show={show}
         setShow={setShow}
-        style="absolute top-0 left-0 w-full h-screen opacity-0 invisible z-50 flex items-center justify-center p-4 backdrop-blur-[2px] bg-dark/30"
+        style="absolute top-0 left-0 w-full h-screen invisible z-50 flex items-center justify-center p-4 backdrop-blur-[2px] bg-dark/30"
       >
         <SearchFilters show={show} setShow={setShow} setRecipes={setRecipes} />
       </CollapseLayout>

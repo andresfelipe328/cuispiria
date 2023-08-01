@@ -3,7 +3,7 @@ import React from "react";
 import SearchFilterForm from "../forms/SearchFilterForm";
 
 type Props = {
-  show: boolean;
+  show: boolean | null;
   setShow: Function;
   setRecipes: Function;
 };

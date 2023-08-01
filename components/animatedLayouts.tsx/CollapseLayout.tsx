@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 
 type Props = {
-  show: boolean;
+  show: boolean | null;
   setShow: Function;
   style: string;
   children: React.ReactNode;
@@ -10,8 +10,8 @@ type Props = {
 
 const CollapseLayout = ({ show, setShow, style, children }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (show) {
+  useLayoutEffect(() => {
+    if (show === true) {
       gsap.to(ref.current, {
         duration: 0.25,
         y: 0,
@@ -20,11 +20,12 @@ const CollapseLayout = ({ show, setShow, style, children }: Props) => {
         pointerEvents: "all",
         ease: "power2.out",
       });
-    } else {
+    } else if (show === false) {
       gsap.to(ref.current, {
         duration: 0.25,
         y: -5,
         opacity: 0,
+        visibility: "invisible",
         pointerEvents: "none",
         ease: "power2.out",
       });

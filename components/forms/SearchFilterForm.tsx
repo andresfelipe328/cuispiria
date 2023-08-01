@@ -8,7 +8,7 @@ import { BsCheckLg } from "react-icons/bs";
 import { FaTimes } from "react-icons/fa";
 
 type Props = {
-  show: boolean;
+  show: boolean | null;
   setShow: Function;
   setRecipes: Function;
 };
@@ -28,9 +28,9 @@ const SearchFilterForm = ({ show, setShow, setRecipes }: Props) => {
       <button
         onClick={() => setShow(!show)}
         type="button"
-        className="absolute top-4 right-4"
+        className="group absolute top-2 right-2 p-2"
       >
-        <FaTimes className="text-dark hover:text-light hover:rotate-180 transition-all duration-200 ease-in-out" />
+        <FaTimes className="text-dark group-hover:text-light group-hover:rotate-180 transition-all duration-200 ease-in-out" />
       </button>
 
       <h1 className="text-light">Filters</h1>

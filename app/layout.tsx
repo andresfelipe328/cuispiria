@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata } from "next";
 
 import Navbar from "@/components/global/Navbar";
-import Footer from "@/components/global/Footer";
 
 import { Josefin_Sans, Crimson_Pro } from "next/font/google";
 import RootLayoutAnimation from "@/components/animatedLayouts.tsx/RootLayout";
