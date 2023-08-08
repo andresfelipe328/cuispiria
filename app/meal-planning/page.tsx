@@ -2,9 +2,9 @@ import React from "react";
 import type { Metadata } from "next";
 
 import BasicLayout from "@/components/animatedLayouts.tsx/BasicLayout";
-import MealsCalendar from "@/components/mealPlanningPage/MealsCalendar";
 import TodayMeals from "@/components/mealPlanningPage/TodayMeals";
 import MealsAnalysis from "@/components/mealPlanningPage/MealsAnalysis";
+import MainCalendar from "@/components/mealPlanningPage/mealCalendar/MainCalendar";
 
 export const metadata: Metadata = {
   title: "Cuispiria - Meal Planning",
@@ -19,7 +19,7 @@ const page = () => {
     >
       <h2>Meal Planning</h2>
 
-      <MealsCalendar />
+      <MainCalendar />
       <TodayMeals />
       <MealsAnalysis />
     </BasicLayout>

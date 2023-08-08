@@ -35,7 +35,13 @@ const Navbar = () => {
   return (
     <header className="sticky top-0 p-4 flex items-center justify-between gap-8 bg-main z-50">
       <div className="flex items-center gap-4">
-        <Image src="/cuispiria.svg" width={70} height={70} alt="app logo" />
+        <Image
+          src="/cuispiria.svg"
+          width={70}
+          height={70}
+          alt="app logo"
+          priority
+        />
         <h1>CUISPIRIA</h1>
       </div>
       <nav>
