@@ -1,9 +1,21 @@
 import React from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+import { Metadata } from "next";
 
 import BasicLayout from "@/components/animatedLayouts.tsx/BasicLayout";
 import RecipesList from "@/components/yourRecipesPage/RecipesList";
 
-const page = () => {
+export const metadata: Metadata = {
+  title: "Cuispiria - Your Recipes",
+  description: "List of all your saved and custom recipes",
+};
+
+const page = async () => {
+  // Checks for authentication
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/login");
   return (
     <BasicLayout
       Tag={"div"}

@@ -1,5 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 import BasicLayout from "@/components/animatedLayouts.tsx/BasicLayout";
 import TodayMeals from "@/components/mealPlanningPage/TodayMeals";
@@ -11,7 +14,11 @@ export const metadata: Metadata = {
   description: "Plan your meals for the day",
 };
 
-const page = () => {
+const page = async () => {
+  // Checks for authentication
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("/login");
+
   return (
     <BasicLayout
       Tag={"div"}

@@ -36,7 +36,7 @@ const CalendarModal = ({
   };
 
   return (
-    <div className="absolute w-full h-full p-2 top-0 left-0 flex items-center justify-center bg-black/30 backdrop-blur-[2px] z-50">
+    <div className="absolute w-full h-full p-2 top-0 left-0 flex items-center justify-center bg-dark/30 backdrop-blur-[2px] z-50">
       <div className="relative bg-main p-4 w-full md:w-fit h-full md:h-1/2 overflow-auto">
         <h1>
           {selectedSlot!.day} - {renderTime()}
