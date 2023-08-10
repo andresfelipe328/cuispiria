@@ -11,7 +11,7 @@ type Props = {
   setMeals: Function;
 };
 
-const CalendarModal = ({
+const CreateMealModal = ({
   meals,
   selectedSlot,
   show,
@@ -20,7 +20,7 @@ const CalendarModal = ({
 }: Props) => {
   const dayMeals = meals.filter(
     (meal) =>
-      meal.day.getDate() === new Date(selectedSlot!.day).getDate() &&
+      new Date(meal.date).getDate() === new Date(selectedSlot!.day).getDate() &&
       meal.timeSlot === selectedSlot!.timeSlot
   );
 
@@ -60,4 +60,4 @@ const CalendarModal = ({
   );
 };
 
-export default CalendarModal;
+export default CreateMealModal;

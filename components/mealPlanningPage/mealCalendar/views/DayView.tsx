@@ -25,13 +25,14 @@ const DayView = ({
   const isThereMeal = (day: Date, timeSlot: number) => {
     return meals.find(
       (meal) =>
-        meal.day.getDate() === day.getDate() && meal.timeSlot === timeSlot
+        new Date(meal.date).getDate() === day.getDate() &&
+        meal.timeSlot === timeSlot
     );
   };
 
   const handleDelete = (e: React.SyntheticEvent, selectedMeal: Meal) => {
     e.stopPropagation();
-    setMeals(meals.filter((meal) => meal.id !== selectedMeal.id));
+    setMeals(meals.filter((meal) => meal.mealId !== selectedMeal.mealId));
   };
 
   const handleCopy = (e: React.SyntheticEvent, selectedMeal: Meal) => {
@@ -51,7 +52,7 @@ const DayView = ({
         id: nanoid(),
         day: day,
         timeSlot: timeSlot,
-        name: copyMeal!.name,
+        name: copyMeal!.title,
         time: copyMeal!.time,
         ingredients: copyMeal!.ingredients,
         instructions: copyMeal!.instructions,
@@ -84,7 +85,7 @@ const DayView = ({
           >
             <FaTrash className="text-red-500" />
           </button>
-          <h4 className="font-semibold">{meal.name}</h4>
+          <h4 className="font-semibold">{meal.title}</h4>
           <button
             onClick={(e) => handleCopy(e, meal)}
             className=" bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-in-out"

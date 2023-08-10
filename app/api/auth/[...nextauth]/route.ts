@@ -14,11 +14,10 @@ export const authOptions: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
     async session({ session, token, user }: any) {
-      const newSession = {
-        ...session,
-        user,
-      };
-      return newSession;
+      if (session?.user) {
+        session.user.id = user.id;
+      }
+      return session;
     },
   },
 };

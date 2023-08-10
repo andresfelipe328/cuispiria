@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
+import { getAllMeals } from "@/utils/mongoDBHelpers";
 
 import BasicLayout from "@/components/animatedLayouts.tsx/BasicLayout";
 import TodayMeals from "@/components/mealPlanningPage/TodayMeals";
@@ -19,6 +20,8 @@ const page = async () => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
+  const allMeals = await getAllMeals(session);
+
   return (
     <BasicLayout
       Tag={"div"}
@@ -26,7 +29,7 @@ const page = async () => {
     >
       <h2>Meal Planning</h2>
 
-      <MainCalendar />
+      <MainCalendar allMeals={JSON.stringify(allMeals)} />
       <TodayMeals />
       <MealsAnalysis />
     </BasicLayout>

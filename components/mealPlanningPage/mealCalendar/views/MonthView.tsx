@@ -11,9 +11,7 @@ const MonthView = ({ selectedDate, meals }: Props) => {
   const daysInMonthView = handleMonthView(selectedDate);
 
   const isThereMeal = (date: Date) => {
-    const dayMeals = meals.filter(
-      (meal) => meal.day.toDateString() === date.toDateString()
-    );
+    const dayMeals = meals.filter((meal) => meal.date === date.toDateString());
 
     if (dayMeals.length > 0)
       return dayMeals.map((meal, index) => (

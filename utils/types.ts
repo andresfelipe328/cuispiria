@@ -4,23 +4,39 @@ export type Slot = {
 };
 
 export type Meal = {
-  id: string;
-  day: Date;
+  userId: string;
+  date: string;
   timeSlot: number;
-  name: string;
+  mealId: string;
+  image: string;
+  title: string;
   time: string;
+  type: string[];
+  customed: boolean;
   ingredients: Ingredient[];
   instructions: Instruction[];
 };
 
 export type Ingredient = {
-  id: string;
+  ingredientId: string;
   name: string;
   amount: string;
   units?: string;
 };
 
-export type Instruction = {
+export type TodayMeal = {
   id: string;
-  name: string;
+  date: string;
+  timeSlot: number;
+  mealId: number;
+  image: string;
+  title: string;
+  time: number;
+  type: String[];
+  customed: boolean;
+};
+
+export type Instruction = {
+  instructionId: string;
+  text: string;
 };

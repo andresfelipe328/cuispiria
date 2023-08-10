@@ -21,6 +21,8 @@
     "eslint-config-next": "13.4.12",
     "gsap": "^3.12.2",
     "mongodb": "^5.7.0",
+    "mongoose": "^7.4.2",
+    "nanoid": "^4.0.2",
     "next": "13.4.12",
     "next-auth": "^4.22.5",
     "postcss": "8.4.27",

@@ -65,6 +65,10 @@
   .filter-checkbox {
     @apply p-1 flex items-center justify-center rounded-md bg-extra peer-checked:bg-dark peer-checked:shadow-small hover:shadow-small hover:bg-dark transition-all duration-200 ease-in-out cursor-pointer;
   }
+
+  .point {
+    @apply absolute w-3 h-3 rounded-3xl bg-dark top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
+  }
 }
 
 @layer utilities {

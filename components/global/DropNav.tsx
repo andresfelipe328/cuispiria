@@ -1,7 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import React, { useCallback, useEffect } from "react";
+import { useSession } from "next-auth/react";
+
+import Logout from "../auth/Logout";
 
 import { FaTimes } from "react-icons/fa";
 import { BiSolidDashboard } from "react-icons/bi";
@@ -44,6 +48,7 @@ const NAVLINKS = [
 ];
 
 const DropNav = ({ show, setShow }: Props) => {
+  const { data: session, status } = useSession();
   const handleDroNav = useCallback(() => {
     const windowSize = window.innerWidth;
     if (show && windowSize > 767) setShow(!show);
@@ -76,6 +81,20 @@ const DropNav = ({ show, setShow }: Props) => {
             </small>
           </Link>
         ))}
+
+        {session && (
+          <div className="absolute bottom-5 right-5 flex items-center gap-2">
+            <Image
+              src={session!.user!.image!}
+              width={50}
+              height={50}
+              alt="app logo"
+              className="rounded-full border-4 border-light shadow-small"
+              priority
+            />
+            <Logout />
+          </div>
+        )}
       </div>
     </div>
   );

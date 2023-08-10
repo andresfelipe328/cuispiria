@@ -3,7 +3,11 @@ import React from "react";
 import { BiTimeFive } from "react-icons/bi";
 import { FaImage } from "react-icons/fa";
 
-const TodayMeals = () => {
+type Props = {
+  allMeals?: any[];
+};
+
+const TodayMeals = ({ allMeals }: Props) => {
   const date = new Date();
   return (
     <div className="flex flex-col gap-2 p-4 bg-dark/5 rounded-md shadow-small">

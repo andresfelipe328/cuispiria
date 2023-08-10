@@ -4,6 +4,7 @@ import { Meal } from "@/utils/types";
 import { handleWeekView } from "@/utils/calendarHelper";
 import { FaTrash, FaCopy, FaPaste } from "react-icons/fa";
 import { nanoid } from "nanoid";
+import { useSession } from "next-auth/react";
 
 type Props = {
   selectedDate: Date;
@@ -24,6 +25,8 @@ const WeekView = ({
   const hours = Array.from({ length: 25 }, (_, i) => i);
   const daysInWeek = handleWeekView(selectedDate);
 
+  const session: any = useSession();
+
   const handleCellClick = (
     dayIndex: number,
     timeSlotIndex: number,
@@ -41,9 +44,20 @@ const WeekView = ({
     });
   };
 
-  const handleDelete = (e: React.SyntheticEvent, selectedMeal: Meal) => {
+  const handleDelete = async (e: React.SyntheticEvent, selectedMeal: Meal) => {
     e.stopPropagation();
-    setMeals(meals.filter((meal) => meal.id !== selectedMeal.id));
+    setMeals(meals.filter((meal) => meal.mealId !== selectedMeal.mealId));
+
+    const res = await fetch("http://localhost:3000/api/delete-custom-meal", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session.data.user.id,
+        mealId: selectedMeal.mealId,
+      }),
+    });
   };
 
   const handleCopy = (e: React.SyntheticEvent, selectedMeal: Meal) => {
@@ -51,22 +65,48 @@ const WeekView = ({
     setCopyMeal(selectedMeal);
   };
 
-  const handlePaste = (
+  const handlePaste = async (
     e: React.SyntheticEvent,
     day: Date,
     timeSlot: number
   ) => {
     e.stopPropagation();
+    const newMealId = nanoid();
+    const res = await fetch("http://localhost:3000/api/create-custom-meal", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session.data.user.id,
+        mealId: newMealId,
+        image: "urlimage",
+        type: copyMeal?.type,
+        customed: true,
+        title: copyMeal?.title,
+        time: copyMeal?.time,
+        date: day,
+        timeSlot: timeSlot,
+        ingredients: copyMeal?.ingredients,
+        instructions: copyMeal?.instructions,
+      }),
+    });
+
+    const { message, code } = await res.json();
     setMeals([
       ...meals,
       {
-        id: nanoid(),
-        day: day,
+        userId: session.data.user.id,
+        mealId: nanoid(),
+        date: day.toDateString(),
         timeSlot: timeSlot,
-        name: copyMeal!.name,
-        time: copyMeal!.time,
-        ingredients: copyMeal!.ingredients,
-        instructions: copyMeal!.instructions,
+        image: "urlimage",
+        type: copyMeal?.type,
+        title: copyMeal?.title,
+        time: copyMeal?.time,
+        customed: true,
+        ingredients: copyMeal?.ingredients,
+        instructions: copyMeal?.instructions,
       },
     ]);
     setCopyMeal(undefined);
@@ -75,7 +115,8 @@ const WeekView = ({
   const isThereMeal = (day: Date, timeSlot: number) => {
     const meal = meals.find(
       (meal) =>
-        meal.day.getDate() === day.getDate() && meal.timeSlot === timeSlot
+        new Date(meal.date).getDate() === day.getDate() &&
+        meal.timeSlot === timeSlot
     );
 
     return meal;
@@ -88,7 +129,7 @@ const WeekView = ({
       return (
         <div className="absolute text-center top-0 left-0 w-full h-full flex flex-col gap-2 items-center justify-center">
           <h4 className="font-semibold opacity-0 md:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300 ease-in-out">
-            {meal.name}
+            {meal.title}
           </h4>
           <span className="point md:opacity-0 group-hover:-translate-y-3 transition-all duration-300 ease-in-out"></span>
           <div className="flex justify-around w-full">

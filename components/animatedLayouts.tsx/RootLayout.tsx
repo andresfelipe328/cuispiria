@@ -2,6 +2,7 @@
 
 import React, { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { SessionProvider } from "next-auth/react";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   // Variables
@@ -20,13 +21,15 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <main
-      className="root h-screen flex flex-col overflow-auto"
-      style={{ opacity: 0 }}
-      ref={rootRef}
-    >
-      {children}
-    </main>
+    <SessionProvider>
+      <main
+        className="root h-screen flex flex-col overflow-auto"
+        style={{ opacity: 0 }}
+        ref={rootRef}
+      >
+        {children}
+      </main>
+    </SessionProvider>
   );
 };
 

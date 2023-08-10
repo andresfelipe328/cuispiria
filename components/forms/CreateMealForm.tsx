@@ -1,5 +1,6 @@
 import { Ingredient, Instruction, Meal, Slot } from "@/utils/types";
 import { nanoid } from "nanoid";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 
@@ -18,10 +19,13 @@ const CreateMealForm = ({
   setShow,
   show,
 }: Props) => {
+  const session: any = useSession();
+
   const isThereMeal = () => {
     const meal = meals.findIndex(
       (meal) =>
-        meal.day.getDate() === new Date(selectedSlot.day).getDate() &&
+        new Date(meal.date).getDate() ===
+          new Date(selectedSlot.day).getDate() &&
         meal.timeSlot === selectedSlot.timeSlot
     );
 
@@ -30,9 +34,12 @@ const CreateMealForm = ({
 
   const mealIndex = isThereMeal();
   const [mealName, setMealName] = useState<string | undefined>(
-    meals[mealIndex]?.name
+    meals[mealIndex]?.title
   );
   const [time, setTime] = useState<string | undefined>(meals[mealIndex]?.time);
+  const [mealType, setMealType] = useState<string | undefined>(
+    meals[mealIndex]?.type.toString()
+  );
   const [ingredients, setIngredients] = useState<Ingredient[]>(
     meals[mealIndex]?.ingredients || []
   );
@@ -40,15 +47,42 @@ const CreateMealForm = ({
     meals[mealIndex]?.instructions || []
   );
 
-  const handleAddMeal = (e: React.FormEvent) => {
+  const handleAddMeal = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const newMealId = nanoid();
+    const res = await fetch("http://localhost:3000/api/create-custom-meal", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session.data.user.id,
+        mealId: meals[mealIndex]?.mealId || newMealId,
+        image: "urlimage",
+        type: mealType!.split(","),
+        customed: true,
+        title: mealName,
+        time: Number(time),
+        date: new Date(selectedSlot.day),
+        timeSlot: selectedSlot.timeSlot,
+        ingredients: ingredients,
+        instructions: instructions,
+      }),
+    });
+
+    const { message, code } = await res.json();
 
     if (mealIndex > -1) {
       meals[mealIndex] = {
-        id: meals[mealIndex].id,
-        name: mealName!,
+        userId: session.data.user.id,
+        mealId: meals[mealIndex].mealId,
+        image: "urlimage",
+        type: mealType!.split(","),
+        customed: true,
+        title: mealName!,
         time: time!,
-        day: meals[mealIndex].day,
+        date: meals[mealIndex].date,
         timeSlot: meals[mealIndex].timeSlot,
         ingredients: ingredients,
         instructions: instructions,
@@ -58,11 +92,15 @@ const CreateMealForm = ({
       setMeals([
         ...meals,
         {
-          id: nanoid(),
-          day: new Date(selectedSlot!.day),
+          userId: session.data.user.id,
+          mealId: newMealId,
+          date: new Date(selectedSlot!.day),
           timeSlot: selectedSlot!.timeSlot,
-          name: mealName,
+          image: "urlimage",
+          type: mealType!.split(","),
+          title: mealName,
           time,
+          customed: true,
           ingredients,
           instructions,
         },
@@ -71,11 +109,19 @@ const CreateMealForm = ({
   };
 
   const handleDeleteIngredient = (ingredient: Ingredient) => {
-    setIngredients(ingredients.filter((prev) => prev.id !== ingredient.id));
+    setIngredients(
+      ingredients.filter(
+        (prev) => prev.ingredientId !== ingredient.ingredientId
+      )
+    );
   };
 
   const handleDeleteInstruction = (instruction: Instruction) => {
-    setInstructions(instructions.filter((prev) => prev.id !== instruction.id));
+    setInstructions(
+      instructions.filter(
+        (prev) => prev.instructionId !== instruction.instructionId
+      )
+    );
   };
 
   return (
@@ -87,15 +133,21 @@ const CreateMealForm = ({
           <div className="flex flex-col gap-2">
             <input
               type="text"
-              placeholder={mealName || "meal name"}
+              placeholder={mealName || "meal title"}
               className="w-full"
               onChange={(e) => setMealName(e.target.value)}
             />
             <input
               type="text"
-              placeholder={time || "time required"}
+              placeholder={time || "time required in minutes"}
               className="w-full"
               onChange={(e) => setTime(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder={mealType || "meal type(s) - separate with commas"}
+              className="w-full"
+              onChange={(e) => setMealType(e.target.value)}
             />
           </div>
         </div>
@@ -104,7 +156,7 @@ const CreateMealForm = ({
           <h3 className="font-bold">Ingredients:</h3>
 
           {ingredients.map((ingredient, index) => (
-            <div key={ingredient.id} className="flex gap-1">
+            <div key={ingredient.ingredientId} className="flex gap-1">
               <input
                 type="text"
                 placeholder={ingredient.name || "ingredient"}
@@ -139,7 +191,7 @@ const CreateMealForm = ({
             onClick={() =>
               setIngredients([
                 ...ingredients,
-                { id: nanoid(), name: "", amount: "0" },
+                { ingredientId: nanoid(), name: "", amount: "0" },
               ])
             }
           >
@@ -150,12 +202,12 @@ const CreateMealForm = ({
       <div className="flex flex-col gap-2">
         <h2>Instructions:</h2>
         {instructions.map((instruction, index) => (
-          <div key={instruction.id} className="flex gap-1">
+          <div key={instruction.instructionId} className="flex gap-1">
             <input
               type="text"
-              placeholder={instruction.name || "instruction"}
+              placeholder={instruction.text || "instruction"}
               className="w-full mx-auto"
-              onChange={(e) => (instruction.name = e.target.value)}
+              onChange={(e) => (instruction.text = e.target.value)}
             />
             <button
               className="bg-dark p-2 rounded-md shadow-small"
@@ -170,7 +222,10 @@ const CreateMealForm = ({
           type="button"
           className="bg-light p-2 rounded-md w-fit mx-auto"
           onClick={() =>
-            setInstructions([...instructions, { id: nanoid(), name: "" }])
+            setInstructions([
+              ...instructions,
+              { instructionId: nanoid(), text: "" },
+            ])
           }
         >
           <p className="text-main font-semibold">add instruction</p>

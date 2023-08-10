@@ -8,16 +8,20 @@ import MonthView from "./views/MonthView";
 import WeekView from "./views/WeekView";
 import DayView from "./views/DayView";
 import CalendarHeader from "./CalendarHeader";
-import CalendarModal from "./CalendarModal";
+import CreateMealModal from "./CreateMealModal";
 
-const MainCalendar = () => {
+type Props = {
+  allMeals: string;
+};
+
+const MainCalendar = ({ allMeals }: Props) => {
   // Variables
   const todayDate = new Date();
   const [selectedDate, setSelectedDate] = useState(todayDate);
   const [viewType, setViewType] = useState("month");
   const [showModal, setShowModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState<Slot>();
-  const [meals, setMeals] = useState<Meal[]>([]);
+  const [meals, setMeals] = useState<Meal[]>(JSON.parse(allMeals));
 
   const renderCalendarView = () => {
     return (
@@ -50,7 +54,7 @@ const MainCalendar = () => {
   return (
     <>
       {showModal && (
-        <CalendarModal
+        <CreateMealModal
           meals={meals}
           setMeals={setMeals}
           setShow={setShowModal}
@@ -59,7 +63,7 @@ const MainCalendar = () => {
         />
       )}
 
-      <div className="flex flex-col w-full max-w-full h-[500px] px-1 overflow-auto">
+      <div className="flex flex-col w-full max-w-full h-[570px] px-1 overflow-auto">
         <CalendarHeader
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
